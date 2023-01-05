@@ -2,8 +2,9 @@
   <div class="mainMenu">
     <!-- logo -->
     <div class="logo">
+      <!-- <i class="el-icon-plus"></i> -->
       <img src="~@/assets/img/logo.svg" alt="logo" />
-      <span>Vue3+TS</span>
+      <span v-if="!isCollapse">Vue3+TS</span>
     </div>
     <el-menu
       active-text-color="#ffd04b"
@@ -12,17 +13,21 @@
       default-active="2"
       text-color="#fff"
       :unique-opened="true"
+      :collapse="isCollapse"
       router
     >
       <template v-for="menu in userMenus" :key="menu.id">
         <template v-if="menu.type === 1">
-          <el-submenu index="1">
+          <el-submenu :index="menu.id + ''">
             <template #title>
               <i v-if="menu.icon" :class="menu.icon"></i>
               <span>{{ menu.name }}</span>
             </template>
             <template v-for="submenu in menu.children" :key="submenu.id">
-              <el-menu-item index="1-1">
+              <el-menu-item
+                :index="submenu.id + ''"
+                @click="loadSubmenuPage(submenu)"
+              >
                 <i v-if="submenu.icon" :class="submenu.icon"></i>
                 <span>{{ submenu.name }}</span>
               </el-menu-item>
@@ -30,7 +35,7 @@
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item index="2">
+          <el-menu-item :index="submenu.id + ''">
             <el-icon><icon-menu /></el-icon>
             <span>{{ menu.name }}</span>
           </el-menu-item>
@@ -42,13 +47,28 @@
 
 <script lang="ts">
 import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
 import { computed, defineComponent } from 'vue'
 // import { useStore } from '@/store'
 export default defineComponent({
+  props: {
+    isCollapse: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
     const store = useStore()
+    const router = useRouter()
     const userMenus = computed(() => store.state.login.userMenu)
-    return { userMenus }
+    const loadSubmenuPage = (submenu: any) => {
+      console.log('.................')
+      //页面跳转
+      router.push({
+        path: submenu.url
+      })
+    }
+    return { userMenus, loadSubmenuPage }
   }
 })
 </script>
@@ -68,5 +88,9 @@ export default defineComponent({
     font-size: 18px;
     color: #fff;
   }
+}
+//解决折叠后有一条竖线
+.el-menu {
+  border-right: none;
 }
 </style>

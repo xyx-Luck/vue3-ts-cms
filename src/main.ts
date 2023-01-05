@@ -11,7 +11,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { setupStore } from './store'
-
+import * as ElIcons from '@element-plus/icons-vue'
 const app = createApp(App)
 const win: any = window
 if (process.env.NODE_ENV === 'development') {
@@ -19,7 +19,9 @@ if (process.env.NODE_ENV === 'development') {
     win.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue = app
   }
 }
-
+for (const name in ElIcons) {
+  app.component(name, (ElIcons as any)[name])
+}
 // 注册element-plus/其他
 app.use(globalRegister)
 app.use(router)
