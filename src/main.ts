@@ -24,9 +24,11 @@ for (const name in ElIcons) {
 }
 // 注册element-plus/其他
 app.use(globalRegister)
-app.use(router)
-app.use(store)
 setupStore()
+app.use(router)
+
+app.use(store)
+
 app.mount('#app')
 
 // console.log(VUE_APP_BASE_URL)

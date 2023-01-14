@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Localcatch from '../utils/catch'
+import { firstMenu } from '@/utils/map-menus'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -31,5 +32,10 @@ router.beforeEach((to) => {
       return '/login'
     }
   }
+  //如果进入的是main页面
+  if (to.path === '/main') {
+    return firstMenu.url
+  }
 })
+//
 export default router

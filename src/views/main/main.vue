@@ -48,6 +48,9 @@ export default defineComponent({
   background: rgba(0, 0, 0, 0.5);
 }
 .el-header {
-  background: rgba(0, 0, 0, 0.7);
+  // background: rgba(0, 0, 0, 0.7);
+}
+.el-main {
+  background: rgb(238, 236, 236);
 }
 </style>

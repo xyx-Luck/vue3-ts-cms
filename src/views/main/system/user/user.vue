@@ -1,16 +1,20 @@
 <template>
   <div class="user">
-    <h2>user</h2>
+    <h1>用户管理</h1>
+    <XyxForm v-bind="searchFormData" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import XyxForm from '@/base-ui/form'
+import { searchFormData } from './config/search.config'
 
 export default defineComponent({
+  components: { XyxForm },
   name: 'user',
   setup() {
-    return {}
+    return { searchFormData }
   }
 })
 </script>

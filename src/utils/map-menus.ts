@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 
+let firstMenu: any = null
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
 
@@ -30,6 +31,10 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
       if (menu.type === 2) {
         const route = allRoutes.find((route) => route.path === menu.url)
         if (route) routes.push(route)
+        //当路径是/main，会出现空白页
+        if (!firstMenu) {
+          firstMenu = menu
+        }
       } else {
         _recurseGetRoute(menu.children)
       }
@@ -40,3 +45,43 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
 
   return routes
 }
+
+//定义一个方法，获取当前点击菜单的id
+export function getCurrentClickPath(userMenu: any[], currentpath: any): any {
+  //遍历userMenu
+  for (const menu of userMenu) {
+    if (menu.type === 1) {
+      console.log(11)
+      const findMenu = getCurrentClickPath(menu.children ?? [], currentpath)
+      if (findMenu) {
+        return findMenu
+      }
+    } else if (menu.type === 2 && menu.url === currentpath) {
+      //不等于1就获取
+      //把menu返回
+      return menu
+    }
+  }
+}
+
+//定义一个方法，动态加载面包屑导航
+export function getCurrentBreadCrumb(userMenu: any[], currentpath: any): any {
+  const breadBox = []
+  for (const menu of userMenu) {
+    if (menu.type === 1) {
+      const findmenu = getCurrentBreadCrumb(menu.children ?? [], currentpath)
+      console.log('findmenu', findmenu)
+      if (findmenu.url === currentpath) {
+        breadBox.push({ path: currentpath, name: findmenu.name })
+        //把当前点击的上一级名称也加入
+        breadBox.push({ path: menu.url, name: menu.name })
+      }
+      console.log('breadBox', breadBox)
+      return breadBox
+    } else {
+      return menu
+    }
+  }
+}
+
+export { firstMenu }

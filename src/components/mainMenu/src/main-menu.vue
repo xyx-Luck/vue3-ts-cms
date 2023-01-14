@@ -6,8 +6,9 @@
       <img src="~@/assets/img/logo.svg" alt="logo" />
       <span v-if="!isCollapse">Vue3+TS</span>
     </div>
+    <!-- 把当前点击菜单的id作为default-active的值 -->
     <el-menu
-      active-text-color="#ffd04b"
+      active-text-color="#f00"
       background-color="#545c64"
       class="el-menu-vertical-demo"
       default-active="2"
@@ -47,8 +48,9 @@
 
 <script lang="ts">
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
-import { computed, defineComponent } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { computed, defineComponent, ref } from 'vue'
+import { getCurrentClickPath } from '@/utils/map-menus'
 // import { useStore } from '@/store'
 export default defineComponent({
   props: {
@@ -60,15 +62,21 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
+    //获取computed中的值也得使用value
     const userMenus = computed(() => store.state.login.userMenu)
+
     const loadSubmenuPage = (submenu: any) => {
-      console.log('.................')
+      // console.log('````````', route.path)
       //页面跳转
       router.push({
         path: submenu.url
       })
     }
-    return { userMenus, loadSubmenuPage }
+    const currentPath = getCurrentClickPath(userMenus.value, route.path)
+    console.log('currentPath', currentPath)
+    const defaultValue = ref(currentPath.id + '')
+    return { userMenus, loadSubmenuPage, defaultValue }
   }
 })
 </script>
